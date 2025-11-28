@@ -1,67 +1,102 @@
 # Seed Agent
 
-You are the **seed agent** for Project Emergence — an experiment in autonomous agent creativity. Your job is to plant the first seed: choose what to build, set up the foundation, and implement the first features.
+You are the **seed agent** for Project Emergence — an experiment in autonomous agent creativity. Your job is to set up a multi-feature architecture and build the first feature.
 
 ## Your Mission
 
-You have creative freedom to build **anything you want** within these constraints:
-- **Frontend**: Must use React (choose your own tooling: Vite, Create React App, Next.js, etc.)
-- **Backend**: Optional — if your idea needs one, you can add a thin backend (Express, Fastify, etc.)
-- **What to build**: Completely up to you!
+You're building a **feature gallery** — a React app with multiple independent features, each at its own route. Future agents will add their own features alongside yours.
 
-Think about what would be interesting, useful, or fun. Consider what could grow organically as future agents add to it.
+**Constraints:**
+- **Frontend**: React with Vite and react-router-dom
+- **Backend**: Optional — add if your feature needs it
+- **What to build**: Your first feature can be ANYTHING
+
+## Project Architecture
+
+Set up this structure so future agents can easily add new features:
+
+```
+src/
+├── App.tsx                    # Router + home page gallery
+├── features/
+│   └── your-feature/          # Your first feature
+│       ├── index.tsx          # Main component (default export)
+│       ├── NOTES.md           # Feature-specific documentation
+│       └── components/        # Feature's internal components
+└── shared/                    # Optional shared components
+```
+
+The home page (`/`) should be a gallery showing all available features with links.
 
 ## Your Tasks
 
-### 1. Decide What to Build
-- Choose a project idea that excites you
-- Consider: What would be interesting to watch evolve over many agent sessions?
-- Pick something with room to grow — features that future agents can extend
+### 1. Decide Your First Feature
+- What would be fun, useful, or interesting?
+- It can be anything: a game, a tool, an art project, a utility...
+- Future agents will add completely different features alongside it
 
-### 2. Create `project_vision.md`
-Write a brief vision document (3-5 paragraphs) that describes:
-- What we're building and why
-- The core user experience
-- Ideas for future features (but don't prescribe them — leave room for creativity)
-- Any guiding principles for the project's direction
+### 2. Set Up the Project
+```bash
+npm create vite@latest . -- --template react-ts
+npm install react-router-dom
+```
 
-### 3. Set Up the Project
-- Initialize with your chosen tooling
-- Create sensible directory structure
-- Set up package.json with necessary dependencies
-- Initialize git repository
+Create the router structure in `App.tsx`:
+```tsx
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import YourFeature from './features/your-feature';
 
-### 4. Create `init.sh`
-Write a setup script that:
+function Home() {
+  // Gallery of all features with links
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/your-feature" element={<YourFeature />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+```
+
+### 3. Create `init.sh`
+Setup script that:
 - Installs dependencies
-- Sets up anything else needed (database, etc.)
 - Is idempotent (safe to run multiple times)
+- Starts dev server on **port 5200**
 
-### 5. Implement 1-2 Starter Features
-- Build the core foundation that future agents can extend
-- Focus on getting something working, not perfection
-- Test your features using Chrome DevTools MCP tools
+### 4. Build Your Feature
+- Create your feature in `src/features/your-feature/`
+- Export a default component from `index.tsx`
+- Create `NOTES.md` with feature-specific documentation
+
+### 5. Create `project_vision.md`
+Describe the overall project:
+- This is a feature gallery where each agent adds something new
+- Features can be completely independent
+- The home page showcases what's been built
 
 ### 6. Create `feature_log.json`
-Document what you built:
 ```json
 {
   "features": [
     {
       "id": 1,
-      "name": "Feature name",
+      "name": "Your Feature Name",
+      "route": "/your-feature",
+      "folder": "src/features/your-feature",
       "description": "What it does",
       "added_by_session": 1,
-      "files": ["src/components/Feature.tsx"],
-      "how_to_test": "Navigate to localhost:5173 and do X",
-      "extended_in_sessions": []
+      "sessions_contributed": [1]
     }
   ]
 }
 ```
 
 ### 7. Update `session_log.json`
-Create the session log and add your entry:
 ```json
 {
   "sessions": [
@@ -71,42 +106,40 @@ Create the session log and add your entry:
       "agent_report": {
         "decision": "What you decided to build",
         "reasoning": "Why you chose this",
-        "features_added": [1, 2],
-        "features_extended": [],
-        "notes": "Any observations or thoughts"
+        "feature_added": 1,
+        "notes": "Any observations"
       }
     }
   ]
 }
 ```
 
-### 8. Document in `claude-progress.txt`
-Write notes for future agents:
-- What you built
-- How things are organized
-- Any decisions you made and why
-- Ideas or suggestions for future work
+### 8. Write `claude-progress.txt`
+Notes for future agents:
+- How to add a new feature (folder structure, router setup)
+- Any architectural decisions
+- Ideas they might explore
 
-### 9. Commit Your Work
+### 9. Commit
 ```bash
+git init
 git add -A
-git commit -m "seed: [brief description of what you started]"
+git commit -m "seed: set up feature gallery with [your feature name]"
 ```
 
-## Chrome DevTools MCP Tools
+## Puppeteer MCP Tools
 
-Use these to test your features:
-- `mcp__chrome-devtools__navigate_page` - Navigate to URLs
-- `mcp__chrome-devtools__take_screenshot` - Take screenshots
-- `mcp__chrome-devtools__take_snapshot` - Get accessibility tree snapshot
-- `mcp__chrome-devtools__click` - Click elements
-- `mcp__chrome-devtools__fill` - Fill form fields
-- `mcp__chrome-devtools__press_key` - Press keyboard keys
-- `mcp__chrome-devtools__wait_for` - Wait for text to appear
+Test your feature:
+- `mcp__puppeteer__puppeteer_navigate` - Navigate to URLs
+- `mcp__puppeteer__puppeteer_screenshot` - Take screenshots
+- `mcp__puppeteer__puppeteer_click` - Click elements
+- `mcp__puppeteer__puppeteer_fill` - Fill form fields
+- `mcp__puppeteer__puppeteer_select` - Select dropdown options
+- `mcp__puppeteer__puppeteer_hover` - Hover over elements
+- `mcp__puppeteer__puppeteer_evaluate` - Run JavaScript in the page
 
-## Important Notes
+## Important
 
-- You are the first agent — future agents will build on your work
-- Leave the project in a clean, working state
-- Be creative! This is an experiment in emergent design
-- Your choices set the direction, but future agents can extend in surprising ways
+- Set up clean architecture so future agents can easily add features
+- Your feature is just the first of many — others will be totally different
+- Leave good documentation so agents know how to add their own features
