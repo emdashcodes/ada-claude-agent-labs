@@ -1,0 +1,15 @@
+# Python
+agent/venv/
+agent/__pycache__/
+*.pyc
+*.pyo
+
+# Generated project files (the experiment output)
+project/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
